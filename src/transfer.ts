@@ -234,9 +234,7 @@ export function uploadFrom(source: Readable, config: TransferConfig): Promise<FT
                 resolver.onDataStart(config.remotePath, config.type)
 
                 const uploadStream = source.pipe(dataSocket)
-                console.log('really new finish code')
                 finished(uploadStream, () => {
-                    console.log('new new I iz finished')
                     dataSocket.destroy() // Explicitly close/destroy the socket to signal the end.
                     resolver.onDataDone(task)
                 })

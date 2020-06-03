@@ -215,9 +215,7 @@ function uploadFrom(source, config) {
                 config.ftp.log(`Uploading to ${netUtils_1.describeAddress(dataSocket)} (${netUtils_1.describeTLS(dataSocket)})`);
                 resolver.onDataStart(config.remotePath, config.type);
                 const uploadStream = source.pipe(dataSocket);
-                console.log('really new finish code');
                 stream_1.finished(uploadStream, () => {
-                    console.log('new new I iz finished');
                     dataSocket.destroy(); // Explicitly close/destroy the socket to signal the end.
                     resolver.onDataDone(task);
                 });
