@@ -1,6 +1,6 @@
 import { EventEmitter } from "events"
 import { describeAddress, describeTLS, ipIsPrivateV4Address } from "./netUtils"
-import { Writable, Readable } from "stream"
+import { Writable, Readable, finished } from "stream"
 import { TLSSocket, connect as connectTLS } from "tls"
 import { FTPContext, FTPResponse, TaskResolver } from "./FtpContext"
 import { ProgressTracker, ProgressType } from "./ProgressTracker"
@@ -232,7 +232,11 @@ export function uploadFrom(source: Readable, config: TransferConfig): Promise<FT
             onConditionOrEvent(canUpload, dataSocket, "secureConnect", () => {
                 config.ftp.log(`Uploading to ${describeAddress(dataSocket)} (${describeTLS(dataSocket)})`)
                 resolver.onDataStart(config.remotePath, config.type)
-                source.pipe(dataSocket).once("finish", () => {
+
+                const uploadStream = source.pipe(dataSocket)
+                console.log('really new finish code')
+                finished(uploadStream, () => {
+                    console.log('new new I iz finished')
                     dataSocket.destroy() // Explicitly close/destroy the socket to signal the end.
                     resolver.onDataDone(task)
                 })
